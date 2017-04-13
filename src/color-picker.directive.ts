@@ -398,11 +398,19 @@ export class DialogComponent implements OnInit {
             }
             node = node.parentNode;
         }
-        var boxDirective = this.createBox(this.directiveElementRef.nativeElement, true);
-        if (parentNode === null) { parentNode = node }
-        var boxParent = this.createBox(parentNode, true);
-        this.top = boxDirective.top - boxParent.top;
-        this.left = boxDirective.left - boxParent.left;
+        if(position !== 'fixed') {
+            var boxDirective = this.createBox(this.directiveElementRef.nativeElement, true);
+            if (parentNode === null) { parentNode = node }
+            var boxParent = this.createBox(parentNode, true);
+            this.top = boxDirective.top - boxParent.top;
+            this.left = boxDirective.left - boxParent.left;
+        } else {
+            var boxDirective = this.createBox(this.directiveElementRef.nativeElement, true);
+            var boxParent = this.createBox(node, true);
+            this.top = boxDirective.top - boxParent.top;
+            this.left = boxDirective.left - boxParent.left;
+            this.position = 'fixed';
+        }
         if (this.cpPosition === 'left') {
             this.top += boxDirective.height * this.cpPositionOffset / 100 - this.dialogArrowOffset;
             this.left -= this.cpWidth + this.dialogArrowSize - 2;
