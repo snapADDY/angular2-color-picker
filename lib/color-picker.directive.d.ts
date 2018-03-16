@@ -80,6 +80,7 @@ export declare class DialogComponent implements OnInit {
     private show;
     private top;
     private left;
+    private bottom;
     private position;
     private directiveInstance;
     private initialColor;

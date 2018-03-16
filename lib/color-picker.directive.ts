@@ -200,7 +200,7 @@ export class SliderDirective {
 @Component({
     selector: 'color-picker',
     template: `
-      <div class="color-picker" [hidden]="!show" [style.height.px]="cpHeight" [style.width.px]="cpWidth" [style.top.px]="top" [style.left.px]="left" [style.position]="position" #dialogPopup>
+      <div class="color-picker" [hidden]="!show" [style.height.px]="cpHeight" [style.width.px]="cpWidth" [style.top]="top === 'inherit' ? top : top + 'px'" [style.bottom.px]="bottom" [style.left.px]="left" [style.position]="position" #dialogPopup>
           <div *ngIf="cpDialogDisplay=='popup'" class="arrow arrow-{{cpPosition}}" [style.top.px]="arrowTop"></div>
 
           <div [slider] [style.background-color]="hueSliderColor" [rgX]="1" [rgY]="1" (newValue)="setSaturationAndBrightness($event)" class="saturation-lightness">
@@ -213,11 +213,11 @@ export class SliderDirective {
               </div>
               <div class="right">
                   <div *ngIf="cpAlphaChannel==='disabled'" style="height: 18px;"></div>
-            
+
                   <div [slider] [rgX]="1" (newValue)="setHue($event)" class="hue" #hueSlider>
                       <div [style.left.px]="slider.h" class="cursor"></div>
                   </div>
-            
+
                   <div [hidden]="cpAlphaChannel==='disabled'" [slider] [style.background-color]="alphaSliderColor" [rgX]="1" (newValue)="setAlpha($event)" class="alpha" #alphaSlider>
                       <div [style.left.px]="slider.a" class="cursor"></div>
                   </div>
@@ -271,7 +271,7 @@ export class SliderDirective {
               <button *ngIf="cpOKButton" type="button" class="{{cpOKButtonClass}}" (click)="oKColor()">{{cpOKButtonText}}</button>
               <button *ngIf="cpCancelButton" type="button" class="{{cpCancelButtonClass}}" (click)="cancelColor()">{{cpCancelButtonText}}</button>
           </div>
-  
+
       </div>
     `,
     styles: [`
@@ -292,8 +292,9 @@ export class DialogComponent implements OnInit {
     private sliderDimMax: SliderDimension;
     private format: number;
     private show: boolean;
-    private top: number;
+    private top: any;
     private left: number;
+    private bottom: number;
     private position: string;
     private directiveInstance: any;
     private initialColor: string;
@@ -474,7 +475,6 @@ export class DialogComponent implements OnInit {
             }
             node = node.parentNode;
         }
-		
         if(position !== 'fixed') {
             var boxDirective = this.createBox(this.directiveElementRef.nativeElement, true);
             if (parentNode === null) { parentNode = node }
@@ -491,10 +491,15 @@ export class DialogComponent implements OnInit {
         if (this.cpPosition === 'left') {
             this.top += boxDirective.height * this.cpPositionOffset / 100 - this.dialogArrowOffset;
             this.left -= this.cpWidth + this.dialogArrowSize - 2;
+        } else if (this.cpPosition === 'absolute-top') {
+            this.top = 'inherit';
+            this.left = 15;
+            this.bottom = 60;
+            this.position = 'absolute';
         } else if (this.cpPosition === 'top') {
-            this.top -= dialogHeight + this.dialogArrowSize;
-            this.left += this.cpPositionOffset / 100 * boxDirective.width - this.dialogArrowOffset;
-            this.arrowTop = dialogHeight - 1;
+          this.top -= dialogHeight + this.dialogArrowSize;
+          this.left += this.cpPositionOffset / 100 * boxDirective.width - this.dialogArrowOffset;
+          this.arrowTop = dialogHeight - 1;
         } else if (this.cpPosition === 'bottom') {
             this.top += boxDirective.height + this.dialogArrowSize;
             this.left += this.cpPositionOffset / 100 * boxDirective.width - this.dialogArrowOffset;
