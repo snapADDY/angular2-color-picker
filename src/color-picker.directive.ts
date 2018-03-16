@@ -216,8 +216,9 @@ export class DialogComponent implements OnInit {
     private sliderDimMax: SliderDimension;
     private format: number;
     private show: boolean;
-    private top: number;
+    private top: any;
     private left: number;
+    private bottom: number;
     private position: string;
     private directiveInstance: any;
     private initialColor: string;
@@ -414,10 +415,15 @@ export class DialogComponent implements OnInit {
         if (this.cpPosition === 'left') {
             this.top += boxDirective.height * this.cpPositionOffset / 100 - this.dialogArrowOffset;
             this.left -= this.cpWidth + this.dialogArrowSize - 2;
+        } else if (this.cpPosition === 'absolute-top') {
+            this.top = 'inherit';
+            this.left = 15;
+            this.bottom = 60;
+            this.position = 'absolute';
         } else if (this.cpPosition === 'top') {
-            this.top -= dialogHeight + this.dialogArrowSize;
-            this.left += this.cpPositionOffset / 100 * boxDirective.width - this.dialogArrowOffset;
-            this.arrowTop = dialogHeight - 1;
+          this.top -= dialogHeight + this.dialogArrowSize;
+          this.left += this.cpPositionOffset / 100 * boxDirective.width - this.dialogArrowOffset;
+          this.arrowTop = dialogHeight - 1;
         } else if (this.cpPosition === 'bottom') {
             this.top += boxDirective.height + this.dialogArrowSize;
             this.left += this.cpPositionOffset / 100 * boxDirective.width - this.dialogArrowOffset;
